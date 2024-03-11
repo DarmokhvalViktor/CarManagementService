@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: "jdbc:mysql://localhost:3306/test"
+    url: "jdbc:mysql://localhost:3306/carManagementDB?createDatabaseIfNotExist=true"
     username: "root"
     password: "!P@$$word1995"
     driver-class-name: com.mysql.cj.jdbc.Driver
