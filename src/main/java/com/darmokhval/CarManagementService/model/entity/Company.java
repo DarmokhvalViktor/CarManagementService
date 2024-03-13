@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -22,13 +24,13 @@ public class Company {
     private String address;
     private String password;
     private String email;
-    private String isPremium;
+    private Boolean isPremium;
 
     @ElementCollection
     @CollectionTable(name = "company_roles", joinColumns = @JoinColumn(name = "company_id"))
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
-    private List<String> roles = new ArrayList<>();
+    private Set<String> roles = new HashSet<>();
 
     public Company(String username, String address, String password, String email) {
         this.username = username;

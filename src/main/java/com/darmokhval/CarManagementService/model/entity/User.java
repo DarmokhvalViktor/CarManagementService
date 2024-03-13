@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -40,13 +42,14 @@ public class User {
     @Column(name = "premium_account")
     private Boolean isPremium;
 
+    @Column(name = "number_of_ads")
+    private Integer numberOfAds;
+
     @ElementCollection
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
-    private List<String> roles = new ArrayList<>();
-
-
+    private Set<String> roles = new HashSet<>();
 
     public User(String username, String password, String email) {
         this.username = username;

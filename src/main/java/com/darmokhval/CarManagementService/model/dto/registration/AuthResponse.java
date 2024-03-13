@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -14,5 +15,5 @@ public class AuthResponse {
     private String message;
     private String username;
     private Long id;
-    private List<String> roles;
+    private Set<String> roles;
 }

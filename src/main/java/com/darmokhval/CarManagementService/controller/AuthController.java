@@ -4,6 +4,7 @@ import com.darmokhval.CarManagementService.model.dto.LoginDTO;
 import com.darmokhval.CarManagementService.model.dto.ResponseUserDTO;
 import com.darmokhval.CarManagementService.model.dto.registration.RegistrationDTO;
 import com.darmokhval.CarManagementService.model.dto.registration.AuthResponse;
+import com.darmokhval.CarManagementService.model.dto.registration.UserDTO;
 import com.darmokhval.CarManagementService.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,5 +29,10 @@ public class AuthController {
     public ResponseEntity<?> loginUser(@RequestBody LoginDTO loginDTO) {
         AuthResponse userDTO = authService.loginUser(loginDTO);
         return ResponseEntity.ok(userDTO);
+    }
+
+    @PostMapping("api/auth/manager")
+    public ResponseEntity<?> createManager(@RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(authService.createManager(userDTO));
     }
 }

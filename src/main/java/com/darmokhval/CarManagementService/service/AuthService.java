@@ -46,11 +46,12 @@ public class AuthService {
                     .build();
         } else {
             User user = mainMapper.dtoToUserEntity((UserDTO) registrationDTO);
+
             user.addRole(ERole.ROLE_BUYER.getRole());
             if(registrationDTO.getIsSeller()) {
                 user.addRole(ERole.ROLE_SELLER.getRole());
             }
-            userRepository.save(user);
+            user = userRepository.save(user);
             return AuthResponse.builder()
                     .id(user.getId())
                     .username(registrationDTO.getUsername())
@@ -83,5 +84,17 @@ public class AuthService {
                     .build();
         }
         throw new PasswordMismatchException();
+    }
+
+    public AuthResponse createManager(UserDTO userDTO) {
+        User user = mainMapper.dtoToUserEntity(userDTO);
+        user.addRole(ERole.ROLE_MANAGER.getRole());
+        user = userRepository.save(user);
+        return AuthResponse.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .message("Manager was created")
+                .roles(user.getRoles())
+                .build();
     }
 }

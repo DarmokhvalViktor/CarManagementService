@@ -15,6 +15,7 @@ public class UserDTO extends RegistrationDTO {
     private String email;
     private String password;
     private Boolean isSeller;
+    private Boolean isPremium;
     private String type;
 
     @Override

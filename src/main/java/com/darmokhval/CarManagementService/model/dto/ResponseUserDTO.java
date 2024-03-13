@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -15,5 +16,6 @@ public class ResponseUserDTO {
     private String email;
     private String username;
     private Boolean isSeller;
-    private List<String> roles;
+    private Boolean isPremium;
+    private Set<String> roles;
 }

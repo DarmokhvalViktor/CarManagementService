@@ -1,6 +1,7 @@
 package com.darmokhval.CarManagementService.controller;
 
 import com.darmokhval.CarManagementService.model.dto.ResponseUserDTO;
+import com.darmokhval.CarManagementService.model.dto.registration.RegistrationDTO;
 import com.darmokhval.CarManagementService.model.dto.registration.UserDTO;
 import com.darmokhval.CarManagementService.service.UserService;
 import jakarta.validation.Valid;
@@ -38,4 +39,11 @@ public class UserController {
     public ResponseEntity<?>deleteUser(@PathVariable Long id) {
         return ResponseEntity.ok(userService.deleteUser(id));
     }
+
+    @PutMapping("api/users/{id}/premium")
+    public ResponseEntity<?> buyPremium(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.buyPremium(id));
+    }
+
+
 }

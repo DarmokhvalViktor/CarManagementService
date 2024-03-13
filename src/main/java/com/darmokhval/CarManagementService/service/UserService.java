@@ -3,6 +3,7 @@ package com.darmokhval.CarManagementService.service;
 import com.darmokhval.CarManagementService.exception.EntityNotFoundException;
 import com.darmokhval.CarManagementService.mapper.MainMapper;
 import com.darmokhval.CarManagementService.model.dto.ResponseUserDTO;
+import com.darmokhval.CarManagementService.model.dto.registration.AuthResponse;
 import com.darmokhval.CarManagementService.model.dto.registration.UserDTO;
 import com.darmokhval.CarManagementService.model.entity.ERole;
 import com.darmokhval.CarManagementService.model.entity.User;
@@ -42,7 +43,7 @@ public class UserService {
         user.get().setUsername(userDTO.getUsername());
         user.get().setIsSeller(userDTO.getIsSeller());
         user.get().setPassword(userDTO.getPassword());
-        if(userDTO.getIsSeller()) {
+        if(userDTO.getIsSeller() != null) {
             user.get().addRole(ERole.ROLE_SELLER.getRole());
         }
         return mainMapper.userEntityToDto(userRepository.save(user.get()));
@@ -58,4 +59,20 @@ public class UserService {
         return String.format("User with id %s successfully deleted", id);
     }
 
+    @Transactional
+    public AuthResponse buyPremium(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        if(user.isPresent()) {
+            user.get().setIsPremium(true);
+            userRepository.save(user.get());
+        } else {
+            throw new EntityNotFoundException(id);
+        }
+        return AuthResponse.builder()
+                .id(user.get().getId())
+                .username(user.get().getUsername())
+                .message("User now has premium account")
+                .roles(user.get().getRoles())
+                .build();
+    }
 }
