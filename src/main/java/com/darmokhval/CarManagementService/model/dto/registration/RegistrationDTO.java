@@ -3,6 +3,8 @@ package com.darmokhval.CarManagementService.model.dto.registration;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import java.util.Set;
+
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
@@ -17,6 +19,7 @@ public abstract class RegistrationDTO {
     String password;
     String type;
     Boolean isSeller;
+    Set<String> roles;
 
     public RegistrationDTO() {
     }

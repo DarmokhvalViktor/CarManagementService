@@ -43,9 +43,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.setContext(securityContext);
             }
         } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.getWriter().write("{'error': 'Bad Request'}");
+//            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+//            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+//            response.getWriter().write("{'error': 'Bad Request'}");
         }
         filterChain.doFilter(request, response);
     }

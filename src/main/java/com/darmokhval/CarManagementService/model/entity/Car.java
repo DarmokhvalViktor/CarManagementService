@@ -1,6 +1,7 @@
 package com.darmokhval.CarManagementService.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,16 @@ public class Car {
         inverseJoinColumns = @JoinColumn(name = "car_details_id"))
     private CarDetails carDetails;
 
+    @ManyToOne()
+    private User user;
+
+    @ManyToOne()
+    private Company company;
+
     @Column(name = "photo_path")
     private String photoPath;
+
+    private Integer price;
+    @Pattern(regexp = "^(USD|EUR|UAH)$", message = "Currency type must be either USD, EUR or UAH")
+    private String currencyType;
 }

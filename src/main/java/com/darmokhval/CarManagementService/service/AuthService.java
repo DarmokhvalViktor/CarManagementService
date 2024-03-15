@@ -1,49 +1,60 @@
 package com.darmokhval.CarManagementService.service;
 
+import com.darmokhval.CarManagementService.config.jwt.JwtUtils;
+import com.darmokhval.CarManagementService.config.jwt.MyCustomUserDetails;
+import com.darmokhval.CarManagementService.exception.InvalidRefreshTokenSignatureException;
 import com.darmokhval.CarManagementService.exception.PasswordMismatchException;
 import com.darmokhval.CarManagementService.exception.EntityNotFoundException;
+import com.darmokhval.CarManagementService.exception.RefreshTokenHasExpiredException;
 import com.darmokhval.CarManagementService.mapper.MainMapper;
 import com.darmokhval.CarManagementService.model.dto.LoginDTO;
 import com.darmokhval.CarManagementService.model.dto.ResponseUserDTO;
+import com.darmokhval.CarManagementService.model.dto.TokenPair;
 import com.darmokhval.CarManagementService.model.dto.registration.CompanyDTO;
 import com.darmokhval.CarManagementService.model.dto.registration.RegistrationDTO;
 import com.darmokhval.CarManagementService.model.dto.registration.AuthResponse;
 import com.darmokhval.CarManagementService.model.dto.registration.UserDTO;
+import com.darmokhval.CarManagementService.model.entity.BaseEntity;
 import com.darmokhval.CarManagementService.model.entity.Company;
 import com.darmokhval.CarManagementService.model.entity.ERole;
 import com.darmokhval.CarManagementService.model.entity.User;
 import com.darmokhval.CarManagementService.repository.CompanyRepository;
 import com.darmokhval.CarManagementService.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.Date;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
+    private final JwtUtils jwtUtils;
+    private final PasswordEncoder passwordEncoder;
     private final MainMapper mainMapper;
 
 
-    public AuthResponse register(RegistrationDTO registrationDTO) {
+    public TokenPair register(RegistrationDTO registrationDTO) {
         String type = registrationDTO.getType();
+        TokenPair tokens = new TokenPair();
         if(!RegistrationDTO.isValidType(type)) {
             throw new IllegalArgumentException("Unsupported registration type");
         }
 
         if(registrationDTO.getType().equalsIgnoreCase("company")) {
             Company company = mainMapper.dtoToCompanyEntity((CompanyDTO) registrationDTO);
+            company.setPassword(passwordEncoder.encode(registrationDTO.getPassword()));
             company.addRole(ERole.ROLE_SELLER.getRole());
-            companyRepository.save(company);
+            company = companyRepository.save(company);
 
-            return AuthResponse.builder()
-                    .id(company.getId())
-                    .username(registrationDTO.getUsername())
-                    .message("Company was created")
-                    .roles(company.getRoles())
-                    .build();
+            tokens = createTokenPair(company);
         } else {
             User user = mainMapper.dtoToUserEntity((UserDTO) registrationDTO);
 
@@ -51,50 +62,66 @@ public class AuthService {
             if(registrationDTO.getIsSeller()) {
                 user.addRole(ERole.ROLE_SELLER.getRole());
             }
+            user.setPassword(passwordEncoder.encode(registrationDTO.getPassword()));
             user = userRepository.save(user);
-            return AuthResponse.builder()
-                    .id(user.getId())
-                    .username(registrationDTO.getUsername())
-                    .message("User was created")
-                    .roles(user.getRoles())
-                    .build();
+            tokens = createTokenPair(user);
         }
+        return tokens;
     }
 
-    public AuthResponse loginUser(LoginDTO loginDTO) {
+    public TokenPair loginUser(LoginDTO loginDTO) {
         Optional<User> user = userRepository.findByEmail(loginDTO.getEmail());
         Optional<Company> company = companyRepository.findByEmail(loginDTO.getEmail());
         if(user.isEmpty() && company.isEmpty()) {
             throw new EntityNotFoundException(loginDTO.getEmail());
         }
         if(user.isPresent() && user.get().getPassword().equals(loginDTO.getPassword())) {
-            return AuthResponse.builder()
-                    .id(user.get().getId())
-                    .username(user.get().getUsername())
-                    .roles(user.get().getRoles())
-                    .message("User logged in")
-                    .build();
+            System.out.println(user.get().getRoles());
+            return createTokenPair(user.get());
         }
         if(company.isPresent() && company.get().getPassword().equals(loginDTO.getPassword())) {
-            return AuthResponse.builder()
-                    .id(company.get().getId())
-                    .username(company.get().getUsername())
-                    .roles(company.get().getRoles())
-                    .message("Company logged in")
-                    .build();
+            System.out.println(company.get().getRoles());
+            return createTokenPair(company.get());
         }
         throw new PasswordMismatchException();
     }
 
-    public AuthResponse createManager(UserDTO userDTO) {
+    public TokenPair createManager(UserDTO userDTO) {
         User user = mainMapper.dtoToUserEntity(userDTO);
         user.addRole(ERole.ROLE_MANAGER.getRole());
         user = userRepository.save(user);
-        return AuthResponse.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .message("Manager was created")
-                .roles(user.getRoles())
-                .build();
+        return createTokenPair(user);
+    }
+
+    public TokenPair refresh(TokenPair tokens) {
+        String refreshToken = tokens.getRefreshToken();
+        Date refreshTokenExpiration = jwtUtils.extractExpiration(refreshToken);
+        if(refreshTokenExpiration.before(new Date())) {
+            throw new RefreshTokenHasExpiredException();
+        }
+        if(!jwtUtils.isRefreshToken(refreshToken) || !jwtUtils.isMyCustomToken(refreshToken)) {
+            throw new InvalidRefreshTokenSignatureException();
+        }
+        String username = jwtUtils.getUsernameFromJwt(refreshToken);
+        Optional<User> user = userRepository.findByUsername(username);
+        if(user.isEmpty()) {
+            throw new EntityNotFoundException(username);
+        }
+        return createTokenPair(user.get());
+    }
+
+    private TokenPair createTokenPair(BaseEntity entity) {
+        MyCustomUserDetails userDetails = new MyCustomUserDetails(
+                entity.getUsername(),
+                entity.getPassword(),
+                entity.getEmail(),
+                entity.getRoles()
+                        .stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList()));
+        String accessToken = jwtUtils.generateAccessToken(userDetails);
+        String refreshToken = jwtUtils.generateRefreshToken(userDetails);
+        return new TokenPair(accessToken, refreshToken);
+
     }
 }

@@ -1,9 +1,6 @@
 package com.darmokhval.CarManagementService.controller;
 
-import com.darmokhval.CarManagementService.exception.CarNotFoundException;
-import com.darmokhval.CarManagementService.exception.JwtValidationException;
-import com.darmokhval.CarManagementService.exception.PasswordMismatchException;
-import com.darmokhval.CarManagementService.exception.EntityNotFoundException;
+import com.darmokhval.CarManagementService.exception.*;
 import com.darmokhval.CarManagementService.model.dto.ErrorDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,9 +26,25 @@ public class CustomErrorHandler {
     public ResponseEntity<ErrorDTO> handleCarNotFoundException(CarNotFoundException exception) {
         return createResponse(exception, HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler({RefreshTokenHasExpiredException.class})
+    public ResponseEntity<ErrorDTO> handleRefreshTokenHasExpiredException(RefreshTokenHasExpiredException exception) {
+        return createResponse(exception, HttpStatus.BAD_REQUEST);
+    }
     @ExceptionHandler({JwtValidationException.class})
     public ResponseEntity<ErrorDTO> handleJwtValidationException(JwtValidationException exception) {
         return createResponse(exception, HttpStatus.UNAUTHORIZED);
+    }
+    @ExceptionHandler({InvalidRefreshTokenSignatureException.class})
+    public ResponseEntity<ErrorDTO> handleInvalidRefreshTokenSignatureException(InvalidRefreshTokenSignatureException exception) {
+        return createResponse(exception, HttpStatus.UNAUTHORIZED);
+    }
+    @ExceptionHandler({MaximumNumberOfAdsException.class})
+    public ResponseEntity<ErrorDTO> handleMaximumNumberOfAdsException(MaximumNumberOfAdsException exception) {
+        return createResponse(exception, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler({ForbiddenWordException.class})
+    public ResponseEntity<ErrorDTO> handleForbiddenWordException(ForbiddenWordException exception) {
+        return createResponse(exception, HttpStatus.BAD_REQUEST);
     }
 
     private ResponseEntity<ErrorDTO> createResponse(Exception exception, HttpStatus status) {

@@ -17,6 +17,13 @@ public class MyCustomUserDetails implements UserDetails {
     private String email;
     private Collection<? extends GrantedAuthority> authorities;
 
+    public MyCustomUserDetails(String username, String password, String email, Collection<? extends GrantedAuthority> authorities) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.authorities = authorities;
+    }
+
     public MyCustomUserDetails(Long id, String username, String password, String email, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;

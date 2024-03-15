@@ -17,6 +17,7 @@ public class UserDTO extends RegistrationDTO {
     private Boolean isSeller;
     private Boolean isPremium;
     private String type;
+    private Integer numberOfAds;
 
     @Override
     public String getType() {

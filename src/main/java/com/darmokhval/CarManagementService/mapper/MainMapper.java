@@ -53,6 +53,7 @@ public class MainMapper {
         CarDTO carDTO = new CarDTO();
         carDTO.setBrand(car.getCarDetails().getBrand());
         carDTO.setModel(car.getCarDetails().getModel());
+        carDTO.setDescription(car.getDescription());
         carDTO.setId(car.getId());
         carDTO.setPhotoPath(uploadDirectory + File.separator + car.getPhotoPath());
         return carDTO;

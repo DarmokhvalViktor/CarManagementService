@@ -15,6 +15,7 @@ public class CompanyDTO extends RegistrationDTO{
     private String type;
     private Boolean isSeller;
     private Boolean isPremium;
+    private Integer numberOfAds;
 
     @Override
     public String getType() {

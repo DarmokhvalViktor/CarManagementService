@@ -1,45 +1,64 @@
 package com.darmokhval.CarManagementService.service;
 
-import com.darmokhval.CarManagementService.exception.CarNotFoundException;
+import com.darmokhval.CarManagementService.exception.*;
 import com.darmokhval.CarManagementService.mapper.MainMapper;
 import com.darmokhval.CarManagementService.model.dto.CarDTO;
-import com.darmokhval.CarManagementService.model.entity.Car;
-import com.darmokhval.CarManagementService.model.entity.CarDetails;
+import com.darmokhval.CarManagementService.model.dto.CarDetailsDTO;
+import com.darmokhval.CarManagementService.model.entity.*;
 import com.darmokhval.CarManagementService.repository.CarDetailsRepository;
 import com.darmokhval.CarManagementService.repository.CarRepository;
+import com.darmokhval.CarManagementService.repository.HardLanguageRepository;
+import com.darmokhval.CarManagementService.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CarService {
     private final CarRepository carRepository;
+    private final UserRepository userRepository;
     private final MainMapper mainMapper;
     private final CarDetailsRepository carDetailsRepository;
+    private final HardLanguageRepository hardLanguageRepository;
     private String uploadDirectory;
 
     @Transactional
     public CarDTO saveCar(CarDTO carDTO, MultipartFile multipartFile) {
-        savePhoto(multipartFile);
-        CarDetails details = new CarDetails();
-        details.setBrand(carDTO.getBrand());
-        details.setModel(carDTO.getModel());
-        details = carDetailsRepository.save(details);
+        User user = extractUserFromContext();
+        if(user.getIsPremium() || user.getNumberOfAds() < 1) {
+            checkForForbiddenWords(carDTO.getDescription());
+            savePhoto(multipartFile);
+            CarDetails details = new CarDetails();
+            details.setBrand(carDTO.getBrand());
+            details.setModel(carDTO.getModel());
+            details = carDetailsRepository.save(details);
 
-        Car car = new Car();
-        car.setCarDetails(details);
-        car.setPhotoPath(multipartFile.getOriginalFilename());
-        Car savedCar = carRepository.save(car);
-        return mainMapper.carEntityToDTO(savedCar);
+            Car car = new Car();
+            car.setCarDetails(details);
+            car.setDescription(carDTO.getDescription());
+            car.setPhotoPath(multipartFile.getOriginalFilename());
+            car.setUser(user);
+            Car savedCar = carRepository.save(car);
+            user.setNumberOfAds(user.getNumberOfAds() + 1);
+            user.getCars().add(savedCar);
+            userRepository.save(user);
+            return mainMapper.carEntityToDTO(savedCar);
+        } else {
+            throw new MaximumNumberOfAdsException();
+        }
     }
 
     public List<CarDTO> getCars() {
@@ -57,19 +76,59 @@ public class CarService {
 
     @Transactional
     public CarDTO updateCar(Long id, CarDTO carDTO, Optional<MultipartFile> multipartFile) {
+        User user = extractUserFromContext();
         Car existingCar = carRepository.findById(id).orElseThrow(() -> new CarNotFoundException(id));
-        CarDetails details = existingCar.getCarDetails();
-        if(!carDTO.getBrand().equals(details.getBrand()) || !carDTO.getModel().equals(details.getModel())) {
-            details.setBrand(carDTO.getBrand());
-            details.setModel(carDTO.getModel());
-            carDetailsRepository.save(details);
+        if(user.getId().equals(existingCar.getUser().getId()) ||
+                user.getRoles().contains(ERole.ROLE_ADMIN.getRole()) ||
+                user.getRoles().contains(ERole.ROLE_MANAGER.getRole())) {
+            checkForForbiddenWords(carDTO.getDescription());
+            CarDetails details = existingCar.getCarDetails();
+            if(!carDTO.getBrand().equals(details.getBrand()) || !carDTO.getModel().equals(details.getModel())) {
+                details.setBrand(carDTO.getBrand());
+                details.setModel(carDTO.getModel());
+                carDetailsRepository.save(details);
+            }
+            multipartFile.ifPresent(file -> {
+                savePhoto(file);
+                existingCar.setPhotoPath(file.getOriginalFilename());
+            });
+            existingCar.setDescription(carDTO.getDescription());
+            Car updatedCar = carRepository.save(existingCar);
+            return mainMapper.carEntityToDTO(updatedCar);
+        } else {
+            throw new ForbiddenAccessToAdvertisementException();
         }
-        multipartFile.ifPresent(file -> {
-            savePhoto(file);
-            existingCar.setPhotoPath(file.getOriginalFilename());
-        });
-        Car updatedCar = carRepository.save(existingCar);
-        return mainMapper.carEntityToDTO(updatedCar);
+    }
+
+    @Transactional
+    public String deleteCar(Long id) {
+        User user = extractUserFromContext();
+        Car car = carRepository.findById(id).orElseThrow(() -> new CarNotFoundException(id));
+
+        if(user.getId().equals(car.getUser().getId()) ||
+                user.getRoles().contains(ERole.ROLE_ADMIN.getRole()) ||
+                user.getRoles().contains(ERole.ROLE_MANAGER.getRole())) {
+
+        carRepository.deleteById(id);
+        user.setNumberOfAds(user.getNumberOfAds() - 1);
+        user.getCars().remove(car);
+        userRepository.save(user);
+
+        return String.format("Car with id %d was deleted", id);
+        } else {
+            throw new ForbiddenAccessToAdvertisementException();
+        }
+    }
+
+    public CarDetailsDTO createCarDetails(CarDetailsDTO carDetailsDTO) {
+        CarDetails carDetails = new CarDetails(carDetailsDTO.getBrand(), carDetailsDTO.getModel());
+        carDetails = carDetailsRepository.save(carDetails);
+        return new CarDetailsDTO(carDetails.getBrand(), carDetails.getModel());
+    }
+
+    public List<CarDetailsDTO> getAllCarDetails() {
+        List<CarDetails> carDetailsList = carDetailsRepository.findAll();
+        return carDetailsList.stream().map(carDetails -> new CarDetailsDTO(carDetails.getBrand(), carDetails.getModel())).toList();
     }
 
 
@@ -89,7 +148,7 @@ public class CarService {
         File folder = new File(directoryPath);
         if(!folder.exists()) {
             if(folder.mkdir()) {
-                System.out.println("FOlder created successfully");
+                System.out.println("Folder created successfully");
             } else {
                 System.out.println("Failed to create folder");
             }
@@ -99,13 +158,19 @@ public class CarService {
         uploadDirectory = String.valueOf(folder);
     }
 
+    private User extractUserFromContext() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(username));
+    }
 
-    public String deleteCar(Long id) {
-        try {
-            carRepository.deleteById(id);
-        } catch(IllegalArgumentException e) {
-            throw new CarNotFoundException(id);
+    private void checkForForbiddenWords(String description) {
+        List<InappropriateWord> forbiddenWords = hardLanguageRepository.findAll();
+        Set<String> descriptionWords = Arrays.stream(description.split("\\s+")).collect(Collectors.toSet());
+        for(InappropriateWord word: forbiddenWords) {
+            if(descriptionWords.contains(word.getContent())) {
+                throw new ForbiddenWordException(word.getContent());
+            }
         }
-        return String.format("Car with id %d was deleted", id);
     }
 }

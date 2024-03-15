@@ -18,7 +18,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User implements BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -45,11 +45,14 @@ public class User {
     @Column(name = "number_of_ads")
     private Integer numberOfAds;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Set<String> roles = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Car> cars = new ArrayList<>();
 
     public User(String username, String password, String email) {
         this.username = username;
