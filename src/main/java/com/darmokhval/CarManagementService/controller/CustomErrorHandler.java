@@ -22,8 +22,8 @@ public class CustomErrorHandler {
     public ResponseEntity<ErrorDTO> handleIllegalArgumentException(IllegalArgumentException exception) {
         return createResponse(exception, HttpStatus.BAD_REQUEST);
     }
-    @ExceptionHandler({CarNotFoundException.class})
-    public ResponseEntity<ErrorDTO> handleCarNotFoundException(CarNotFoundException exception) {
+    @ExceptionHandler({AdvertisementNotFoundException.class})
+    public ResponseEntity<ErrorDTO> handleCarNotFoundException(AdvertisementNotFoundException exception) {
         return createResponse(exception, HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler({RefreshTokenHasExpiredException.class})
@@ -45,6 +45,10 @@ public class CustomErrorHandler {
     @ExceptionHandler({ForbiddenWordException.class})
     public ResponseEntity<ErrorDTO> handleForbiddenWordException(ForbiddenWordException exception) {
         return createResponse(exception, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler({InvalidTimePeriodException.class})
+    public ResponseEntity<ErrorDTO> handleInvalidTimePeriodException(InvalidTimePeriodException exception) {
+        return createResponse(exception, HttpStatus.NOT_ACCEPTABLE);
     }
 
     private ResponseEntity<ErrorDTO> createResponse(Exception exception, HttpStatus status) {

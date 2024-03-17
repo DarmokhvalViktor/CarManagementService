@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+
+  mydb:
+    image: mysql:8-oracle
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=mysqldocker
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=user
+    volumes:
+      - ./mysql_database:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    restart: on-failure
+
+  app:
+    image: test_demo
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend:/app
+    restart: on-failure
+    command: >
+      sh -c "/wait-for-it.sh mydb:3306 -- java -jar app.jar"

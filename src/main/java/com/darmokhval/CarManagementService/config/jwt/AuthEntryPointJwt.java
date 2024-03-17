@@ -1,7 +1,6 @@
 package com.darmokhval.CarManagementService.config.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -22,7 +21,7 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
     private final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
-            throws IOException, ServletException {
+            throws IOException {
         if(authException.getCause() instanceof SignatureException) {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "Invalid JWT signature");
         }

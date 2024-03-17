@@ -4,6 +4,7 @@ import com.darmokhval.CarManagementService.model.dto.InappropriateWordDTO;
 import com.darmokhval.CarManagementService.service.HardLanguageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +22,7 @@ public class HardLanguageController {
         return ResponseEntity.ok(hardLanguageService.getAllWords());
     }
     @PostMapping("api/bad_words")
+    @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<InappropriateWordDTO> saveBadWord(@RequestBody InappropriateWordDTO wordDTO) {
         return ResponseEntity.ok(hardLanguageService.saveWord(wordDTO));
     }

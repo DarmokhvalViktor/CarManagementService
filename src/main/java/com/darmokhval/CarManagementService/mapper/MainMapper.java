@@ -1,18 +1,14 @@
 package com.darmokhval.CarManagementService.mapper;
 
-import com.darmokhval.CarManagementService.model.dto.CarDTO;
+import com.darmokhval.CarManagementService.model.dto.AdvertisementDTO;
+import com.darmokhval.CarManagementService.model.dto.MessageDTO;
 import com.darmokhval.CarManagementService.model.dto.registration.CompanyDTO;
 import com.darmokhval.CarManagementService.model.dto.registration.UserDTO;
 import com.darmokhval.CarManagementService.model.dto.ResponseUserDTO;
-import com.darmokhval.CarManagementService.model.entity.Car;
-import com.darmokhval.CarManagementService.model.entity.CarDetails;
-import com.darmokhval.CarManagementService.model.entity.Company;
-import com.darmokhval.CarManagementService.model.entity.User;
+import com.darmokhval.CarManagementService.model.entity.*;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.HashSet;
 
 @Component
 public class MainMapper {
@@ -33,7 +29,7 @@ public class MainMapper {
         userDTO.setId(user.getId());
         userDTO.setEmail(user.getEmail());
         userDTO.setUsername(user.getUsername());
-        userDTO.setRoles(user.getRoles());
+        userDTO.setRole(user.getRole());
         userDTO.setIsSeller(user.getIsSeller());
         userDTO.setIsPremium(user.getIsPremium());
         return userDTO;
@@ -49,13 +45,27 @@ public class MainMapper {
         return company;
     }
 
-    public CarDTO carEntityToDTO(Car car) {
-        CarDTO carDTO = new CarDTO();
-        carDTO.setBrand(car.getCarDetails().getBrand());
-        carDTO.setModel(car.getCarDetails().getModel());
-        carDTO.setDescription(car.getDescription());
-        carDTO.setId(car.getId());
-        carDTO.setPhotoPath(uploadDirectory + File.separator + car.getPhotoPath());
-        return carDTO;
+    public AdvertisementDTO advertisementEntityToDTO(Advertisement advertisement) {
+        AdvertisementDTO advertisementDTO = new AdvertisementDTO();
+        advertisementDTO.setBrand(advertisement.getCarDetails().getBrand());
+        advertisementDTO.setModel(advertisement.getCarDetails().getModel());
+        advertisementDTO.setDescription(advertisement.getDescription());
+        advertisementDTO.setPrice(advertisement.getPrice());
+        advertisementDTO.setLocation(advertisement.getLocation());
+        advertisementDTO.setCurrencyType(advertisement.getCurrencyType());
+        advertisementDTO.setId(advertisement.getId());
+        advertisementDTO.setViews(advertisement.getViews());
+        advertisementDTO.setPhotoPath(uploadDirectory + File.separator + advertisement.getPhotoPath());
+        return advertisementDTO;
+    }
+
+    public MessageDTO messageEntityToDTO(Message message) {
+        MessageDTO dto = new MessageDTO();
+        dto.setId(message.getId());
+        dto.setContent(message.getContent());
+        dto.setTimestamp(message.getTimestamp());
+        dto.setSenderId(message.getSenderId());
+        dto.setRecipientId(message.getRecipientId());
+        return dto;
     }
 }

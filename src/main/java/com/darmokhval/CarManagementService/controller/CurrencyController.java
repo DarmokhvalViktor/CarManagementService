@@ -15,8 +15,8 @@ public class CurrencyController {
     public final CurrencyService currencyService;
 
     @GetMapping("api/currencies")
-    public ResponseEntity<?> fetchExchangeRates() {
+    public ResponseEntity<List<CurrencyDTO>> fetchExchangeRates() {
         List<CurrencyDTO> dto = currencyService.fetchExchangeRates();
-        return ResponseEntity.ok("Fetched" + dto);
+        return ResponseEntity.ok(dto);
     }
 }

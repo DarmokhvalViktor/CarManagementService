@@ -1,18 +1,14 @@
 package com.darmokhval.CarManagementService.controller;
 
 import com.darmokhval.CarManagementService.model.dto.LoginDTO;
-import com.darmokhval.CarManagementService.model.dto.ResponseUserDTO;
 import com.darmokhval.CarManagementService.model.dto.TokenPair;
 import com.darmokhval.CarManagementService.model.dto.registration.RegistrationDTO;
-import com.darmokhval.CarManagementService.model.dto.registration.AuthResponse;
 import com.darmokhval.CarManagementService.model.dto.registration.UserDTO;
 import com.darmokhval.CarManagementService.service.AuthService;
-import com.darmokhval.CarManagementService.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
-    private final UserService userService;
 
     @PostMapping("api/auth/register")
     public ResponseEntity<TokenPair> registerUser(@Valid @RequestBody RegistrationDTO registrationDTO) {
@@ -46,10 +41,5 @@ public class AuthController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<TokenPair> createManager(@RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(authService.createManager(userDTO));
-    }
-    @GetMapping("api/auth/users")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> getUsers() {
-        return ResponseEntity.ok(userService.getUsers());
     }
 }

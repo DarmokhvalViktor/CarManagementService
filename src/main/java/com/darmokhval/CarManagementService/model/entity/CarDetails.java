@@ -19,7 +19,7 @@ public class CarDetails {
     private String model;
 
     @OneToMany(mappedBy = "carDetails")
-    private List<Car> cars;
+    private List<Advertisement> advertisements;
 
     public CarDetails(String brand, String model) {
         this.brand = brand;

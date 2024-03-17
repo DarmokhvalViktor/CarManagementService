@@ -12,9 +12,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class CustomAuthenticationManager implements AuthenticationManager {
@@ -26,10 +26,8 @@ public class CustomAuthenticationManager implements AuthenticationManager {
         Optional<User> user = userRepository.findByUsername(authentication.getName());
         if(user.isPresent()) {
             if(passwordEncoder.matches(authentication.getCredentials().toString(), user.get().getPassword())) {
-                List<GrantedAuthority> grantedAuthorityList = user.get().getRoles()
-                        .stream()
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
+                List<GrantedAuthority> grantedAuthorityList = Collections.singletonList(
+                        new SimpleGrantedAuthority(user.get().getRole()));
                 return new UsernamePasswordAuthenticationToken(authentication.getPrincipal(),
                         authentication.getCredentials(), grantedAuthorityList);
             } else {

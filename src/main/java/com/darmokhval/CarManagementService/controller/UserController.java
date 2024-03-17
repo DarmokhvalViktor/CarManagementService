@@ -1,7 +1,7 @@
 package com.darmokhval.CarManagementService.controller;
 
 import com.darmokhval.CarManagementService.model.dto.ResponseUserDTO;
-import com.darmokhval.CarManagementService.model.dto.registration.RegistrationDTO;
+import com.darmokhval.CarManagementService.model.dto.registration.AuthResponse;
 import com.darmokhval.CarManagementService.model.dto.registration.UserDTO;
 import com.darmokhval.CarManagementService.service.UserService;
 import jakarta.validation.Valid;
@@ -19,32 +19,29 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("api/users")
-    public ResponseEntity<?> getUsers() {
-        List<ResponseUserDTO> users = userService.getUsers();
-        return ResponseEntity.ok(users);
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
+    public ResponseEntity<List<ResponseUserDTO>> getUsers() {
+        return ResponseEntity.ok(userService.getUsers());
     }
 
     @GetMapping("api/users/{id}")
-    public ResponseEntity<?> getUser(@PathVariable Long id) {
-        ResponseUserDTO user = userService.getUser(id);
-        return ResponseEntity.ok(user);
+    public ResponseEntity<ResponseUserDTO> getUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUser(id));
     }
 
     @PutMapping("api/users/{id}")
-    public ResponseEntity<?> updateUser(@Valid @RequestBody UserDTO userDTO, @PathVariable Long id) {
-        ResponseUserDTO user = userService.updateUser(userDTO, id);
-        return ResponseEntity.ok(user);
+    public ResponseEntity<ResponseUserDTO> updateUser(@Valid @RequestBody UserDTO userDTO, @PathVariable Long id) {
+        return ResponseEntity.ok(userService.updateUser(userDTO, id));
     }
 
     @DeleteMapping("api/users/{id}")
-    public ResponseEntity<?>deleteUser(@PathVariable Long id) {
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
+    public ResponseEntity<String>deleteUser(@PathVariable Long id) {
         return ResponseEntity.ok(userService.deleteUser(id));
     }
 
     @PutMapping("api/users/{id}/premium")
-    public ResponseEntity<?> buyPremium(@PathVariable Long id) {
+    public ResponseEntity<AuthResponse> buyPremium(@PathVariable Long id) {
         return ResponseEntity.ok(userService.buyPremium(id));
     }
-
-
 }

@@ -51,17 +51,14 @@ public class AuthService {
         if(registrationDTO.getType().equalsIgnoreCase("company")) {
             Company company = mainMapper.dtoToCompanyEntity((CompanyDTO) registrationDTO);
             company.setPassword(passwordEncoder.encode(registrationDTO.getPassword()));
-            company.addRole(ERole.ROLE_SELLER.getRole());
+            company.setRole(ERole.ROLE_SELLER.getRole());
             company = companyRepository.save(company);
 
             tokens = createTokenPair(company);
         } else {
             User user = mainMapper.dtoToUserEntity((UserDTO) registrationDTO);
 
-            user.addRole(ERole.ROLE_BUYER.getRole());
-            if(registrationDTO.getIsSeller()) {
-                user.addRole(ERole.ROLE_SELLER.getRole());
-            }
+            user.setRole(registrationDTO.getIsSeller() ? ERole.ROLE_SELLER.getRole() : ERole.ROLE_BUYER.getRole());
             user.setPassword(passwordEncoder.encode(registrationDTO.getPassword()));
             user = userRepository.save(user);
             tokens = createTokenPair(user);
@@ -76,11 +73,9 @@ public class AuthService {
             throw new EntityNotFoundException(loginDTO.getEmail());
         }
         if(user.isPresent() && user.get().getPassword().equals(loginDTO.getPassword())) {
-            System.out.println(user.get().getRoles());
             return createTokenPair(user.get());
         }
         if(company.isPresent() && company.get().getPassword().equals(loginDTO.getPassword())) {
-            System.out.println(company.get().getRoles());
             return createTokenPair(company.get());
         }
         throw new PasswordMismatchException();
@@ -88,7 +83,7 @@ public class AuthService {
 
     public TokenPair createManager(UserDTO userDTO) {
         User user = mainMapper.dtoToUserEntity(userDTO);
-        user.addRole(ERole.ROLE_MANAGER.getRole());
+        user.setRole(ERole.ROLE_MANAGER.getRole());
         user = userRepository.save(user);
         return createTokenPair(user);
     }
@@ -115,10 +110,7 @@ public class AuthService {
                 entity.getUsername(),
                 entity.getPassword(),
                 entity.getEmail(),
-                entity.getRoles()
-                        .stream()
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList()));
+                Collections.singletonList(new SimpleGrantedAuthority(entity.getRole())));
         String accessToken = jwtUtils.generateAccessToken(userDetails);
         String refreshToken = jwtUtils.generateRefreshToken(userDetails);
         return new TokenPair(accessToken, refreshToken);

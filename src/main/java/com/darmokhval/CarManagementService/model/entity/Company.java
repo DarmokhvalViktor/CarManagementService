@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -27,22 +25,16 @@ public class Company implements BaseEntity{
     private Boolean isPremium;
     private Integer numberOfAds;
 
-    @ElementCollection
-    @CollectionTable(name = "company_roles", joinColumns = @JoinColumn(name = "company_id"))
     @Column(name = "role")
-    @Enumerated(EnumType.STRING)
-    private Set<String> roles = new HashSet<>();
+    private String role;
 
     @OneToMany(mappedBy = "company")
-    private List<Car> cars = new ArrayList<>();
+    private List<Advertisement> advertisements = new ArrayList<>();
 
     public Company(String username, String address, String password, String email) {
         this.username = username;
         this.address = address;
         this.password = password;
         this.email = email;
-    }
-    public void addRole(String role) {
-        this.roles.add(role);
     }
 }

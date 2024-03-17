@@ -2,6 +2,7 @@ package com.darmokhval.CarManagementService.model.dto.registration;
 
 import com.darmokhval.CarManagementService.model.entity.ERole;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@Schema
 public class UserDTO extends RegistrationDTO {
     private String username;
     private String email;

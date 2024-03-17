@@ -35,7 +35,7 @@ public class AdminInitializerService {
                 User newUser = new User();
                 newUser.setUsername("admin" + i);
                 newUser.setEmail("admin" + i + "@gmail.com");
-                newUser.setRoles(new HashSet<>(Arrays.asList(ERole.ROLE_ADMIN.getRole(), ERole.ROLE_MANAGER.getRole(), ERole.ROLE_SELLER.getRole(), ERole.ROLE_BUYER.getRole())));
+                newUser.setRole(ERole.ROLE_ADMIN.getRole());
                 newUser.setPassword("admin12345"+ i);
                 userRepository.save(newUser);
             }

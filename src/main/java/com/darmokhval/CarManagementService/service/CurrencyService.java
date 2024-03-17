@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -32,10 +33,17 @@ public class CurrencyService {
         try {
             String exchangeRates = restTemplate.getForObject(PRIVAT_BANK_API_URL, String.class);
             List<CurrencyDTO> currencyDTOS = objectMapper.readValue(exchangeRates, new TypeReference<>() {});
-            currencyDTOS
-                    .stream()
-                    .map(dto -> new Currency(dto.getCcy(), dto.getBase_ccy(), dto.getSale(), dto.getBuy()))
-                    .forEach(currencyRepository::save);
+            for(CurrencyDTO dto: currencyDTOS) {
+                Optional<Currency> existingCurrency = currencyRepository.findByCcy(dto.getCcy());
+                if(existingCurrency.isPresent()) {
+                    Currency currency = existingCurrency.get();
+                    currency.setBuy(dto.getBuy());
+                    currency.setSale(dto.getSale());
+                    currencyRepository.save(currency);
+                } else {
+                    currencyRepository.save(new Currency(dto.getCcy(), dto.getBase_ccy(), dto.getSale(), dto.getBuy()));
+                }
+            }
         } catch (Exception e) {
             log.error("Error fetching exchanging rates, {}", e.getMessage());
         }

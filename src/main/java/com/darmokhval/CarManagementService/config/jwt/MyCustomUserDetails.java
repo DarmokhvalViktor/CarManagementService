@@ -6,6 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,10 +34,7 @@ public class MyCustomUserDetails implements UserDetails {
     }
 
     public static MyCustomUserDetails build(User user) {
-        List<GrantedAuthority> grantedAuthorityList = user.getRoles()
-                .stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        List<GrantedAuthority> grantedAuthorityList = Collections.singletonList(new SimpleGrantedAuthority(user.getRole()));
 
         return new MyCustomUserDetails(
                 user.getId(),
