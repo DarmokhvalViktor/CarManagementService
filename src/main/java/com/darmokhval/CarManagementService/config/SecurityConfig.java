@@ -60,7 +60,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/auth/register", "api/auth/login", "/error",
                                 "/api/currencies", "/swagger-ui/index.html", "/swagger-ui.html").permitAll()
-                        .anyRequest().permitAll())
+                        .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authenticationJWTFilter(jwtUtils, customUserDetailsService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
