@@ -1,0 +1,968 @@
+{
+	"info": {
+		"_postman_id": "e15b1306-0aab-4f4f-9be7-341a8ac2dad3",
+		"name": "_carManagementService",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17093488"
+	},
+	"item": [
+		{
+			"name": "register_user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"Olya\",\r\n    \"email\": \"Olya@gmail.com\",\r\n    \"password\": \"12345Q\",\r\n    \"isSeller\": \"true\",\r\n    \"isPremium\":\"true\",\r\n    \"type\":\"user\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login_user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"admin1@gmail.com\",\r\n    \"password\":\"admin123451\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_token_pair_by_refresh_token",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJPbHlhIiwidHlwZSI6ImFjY2VzcyIsImlzcyI6ImNhck1hbmFnZW1lbnRTZXJ2aWNlIiwicm9sZXMiOlsiUk9MRV9TRUxMRVIiXSwiaWF0IjoxNzEwNjkyMjUyLCJleHAiOjE3MTA2OTU4NTJ9.SWPeyz83XGd3QcBM4W0imPeYoXj884ogZKEwTWppcmsMG8RRFKK3wfwgVzrkHgjE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"refreshToken\":\"eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJPbHlhIiwidHlwZSI6InJlZnJlc2giLCJpc3MiOiJjYXJNYW5hZ2VtZW50U2VydmljZSIsInJvbGVzIjpbIlJPTEVfU0VMTEVSIl0sImlhdCI6MTcxMDY5MjI1MiwiZXhwIjoxNzEwNzc4NjUyfQ.Qs2dgJr7Tml3n6KGo91mNQgLBx342FElgVojSLfo9_4XsDV-n3HJviKqE-dvIsEF\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/auth/refresh",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register_manager_as_admin",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbjEiLCJ0eXBlIjoiYWNjZXNzIiwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc3MiOiJjYXJNYW5hZ2VtZW50U2VydmljZSIsImlhdCI6MTcxMDY5MTgyNSwiZXhwIjoxNzEwNjk1NDI1fQ.N8LQTRY4hzzA2G_K_b93MECrBW3u0FUlosTJ3cM1Q70YD0zdLlhdb43GAtT8MJp8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"manager\",\r\n    \"email\": \"manager@gmail.com\",\r\n    \"password\": \"12345Q\",\r\n    \"isSeller\": \"true\",\r\n    \"isPremium\":\"true\",\r\n    \"type\":\"user\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/auth/manager",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"manager"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_exchange_rate(currencies from Privat Bank)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbjEiLCJ0eXBlIjoiYWNjZXNzIiwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc3MiOiJjYXJNYW5hZ2VtZW50U2VydmljZSIsImlhdCI6MTcxMDY5MTgyNSwiZXhwIjoxNzEwNjk1NDI1fQ.N8LQTRY4hzzA2G_K_b93MECrBW3u0FUlosTJ3cM1Q70YD0zdLlhdb43GAtT8MJp8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/currencies",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"currencies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_list_of_forbidden_words",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbjEiLCJ0eXBlIjoiYWNjZXNzIiwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc3MiOiJjYXJNYW5hZ2VtZW50U2VydmljZSIsImlhdCI6MTcxMDY5MTgyNSwiZXhwIjoxNzEwNjk1NDI1fQ.N8LQTRY4hzzA2G_K_b93MECrBW3u0FUlosTJ3cM1Q70YD0zdLlhdb43GAtT8MJp8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"content\":\"ass\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/bad_words",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"bad_words"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add_to_list_of_forbidden_words",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbjEiLCJ0eXBlIjoiYWNjZXNzIiwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc3MiOiJjYXJNYW5hZ2VtZW50U2VydmljZSIsImlhdCI6MTcxMDY5MTgyNSwiZXhwIjoxNzEwNjk1NDI1fQ.N8LQTRY4hzzA2G_K_b93MECrBW3u0FUlosTJ3cM1Q70YD0zdLlhdb43GAtT8MJp8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"content\":\"ass\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/bad_words",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"bad_words"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_all_users(as_admin_or_manager)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbjEiLCJ0eXBlIjoiYWNjZXNzIiwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc3MiOiJjYXJNYW5hZ2VtZW50U2VydmljZSIsImlhdCI6MTcxMDY5MTgyNSwiZXhwIjoxNzEwNjk1NDI1fQ.N8LQTRY4hzzA2G_K_b93MECrBW3u0FUlosTJ3cM1Q70YD0zdLlhdb43GAtT8MJp8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_user_by_id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbjEiLCJ0eXBlIjoiYWNjZXNzIiwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc3MiOiJjYXJNYW5hZ2VtZW50U2VydmljZSIsImlhdCI6MTcxMDY5MTgyNSwiZXhwIjoxNzEwNjk1NDI1fQ.N8LQTRY4hzzA2G_K_b93MECrBW3u0FUlosTJ3cM1Q70YD0zdLlhdb43GAtT8MJp8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/users/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update_user_by_id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbjEiLCJ0eXBlIjoiYWNjZXNzIiwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc3MiOiJjYXJNYW5hZ2VtZW50U2VydmljZSIsImlhdCI6MTcxMDY5MTgyNSwiZXhwIjoxNzEwNjk1NDI1fQ.N8LQTRY4hzzA2G_K_b93MECrBW3u0FUlosTJ3cM1Q70YD0zdLlhdb43GAtT8MJp8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"Olya\",\r\n    \"email\": \"Olya@gmail.com\",\r\n    \"password\": \"12345Q\",\r\n    \"isSeller\": \"true\",\r\n    \"isPremium\":\"true\",\r\n    \"type\":\"user\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete_user_by_id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbjEiLCJ0eXBlIjoiYWNjZXNzIiwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc3MiOiJjYXJNYW5hZ2VtZW50U2VydmljZSIsImlhdCI6MTcxMDY5MTgyNSwiZXhwIjoxNzEwNjk1NDI1fQ.N8LQTRY4hzzA2G_K_b93MECrBW3u0FUlosTJ3cM1Q70YD0zdLlhdb43GAtT8MJp8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"Olya\",\r\n    \"email\": \"Olya@gmail.com\",\r\n    \"password\": \"12345Q\",\r\n    \"isSeller\": \"true\",\r\n    \"isPremium\":\"true\",\r\n    \"type\":\"user\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "buy_premium_for_user_with_id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbjEiLCJ0eXBlIjoiYWNjZXNzIiwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc3MiOiJjYXJNYW5hZ2VtZW50U2VydmljZSIsImlhdCI6MTcxMDY5MTgyNSwiZXhwIjoxNzEwNjk1NDI1fQ.N8LQTRY4hzzA2G_K_b93MECrBW3u0FUlosTJ3cM1Q70YD0zdLlhdb43GAtT8MJp8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"Olya\",\r\n    \"email\": \"Olya@gmail.com\",\r\n    \"password\": \"12345Q\",\r\n    \"isSeller\": \"true\",\r\n    \"isPremium\":\"true\",\r\n    \"type\":\"user\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users/1/premium",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"1",
+						"premium"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_messages_for_advertisment",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJPbHlhIiwidHlwZSI6ImFjY2VzcyIsImlzcyI6ImNhck1hbmFnZW1lbnRTZXJ2aWNlIiwicm9sZXMiOlsiUk9MRV9TRUxMRVIiXSwiaWF0IjoxNzEwNjkyMjUyLCJleHAiOjE3MTA2OTU4NTJ9.SWPeyz83XGd3QcBM4W0imPeYoXj884ogZKEwTWppcmsMG8RRFKK3wfwgVzrkHgjE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/messages/advertisement/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"messages",
+						"advertisement",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "send_messages_for_advertisment",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJPbHlhIiwidHlwZSI6ImFjY2VzcyIsImlzcyI6ImNhck1hbmFnZW1lbnRTZXJ2aWNlIiwicm9sZXMiOlsiUk9MRV9TRUxMRVIiXSwiaWF0IjoxNzEwNjkyMjUyLCJleHAiOjE3MTA2OTU4NTJ9.SWPeyz83XGd3QcBM4W0imPeYoXj884ogZKEwTWppcmsMG8RRFKK3wfwgVzrkHgjE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"senderId\": \"1\",\r\n    \"recipientId\":\"2\",\r\n    \"content\":\"test message\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/messages/advertisement/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"messages",
+						"advertisement",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "save_advertisment_with_photo",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJPbHlhIiwidHlwZSI6ImFjY2VzcyIsImlzcyI6ImNhck1hbmFnZW1lbnRTZXJ2aWNlIiwicm9sZXMiOlsiUk9MRV9TRUxMRVIiXSwiaWF0IjoxNzEwNjkyMjUyLCJleHAiOjE3MTA2OTU4NTJ9.SWPeyz83XGd3QcBM4W0imPeYoXj884ogZKEwTWppcmsMG8RRFKK3wfwgVzrkHgjE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "advertisement",
+							"value": "{\n    \"model\":\"X5\",\n    \"brand\":\"BMW\",\n    \"description\":\"bla-bla-bla\",\n    \"price\":\"1000\",\n    \"currencyType\":\"USD\",\n    \"location\":\"Lviv\"\n}",
+							"contentType": "application/json",
+							"type": "text"
+						},
+						{
+							"key": "photo",
+							"contentType": "multipart/form-data",
+							"type": "file",
+							"src": "/F:/Programming/__Okten_School/Java_Folder/Homework/Java_Advanced/SpringBoot/spring-test/spring-test/src/main/resources/images/bmw3.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/advertisements",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"advertisements"
+					],
+					"query": [
+						{
+							"key": "advertisement",
+							"value": "{\n    \"model\":\"X5\",\n    \"brand\":\"BMW\",\n    \"description\":\"bla-bla-bla\",\n    \"price\":\"1000\",\n    \"currencyType\":\"USD\",\n    \"location\":\"Lviv\"\n}",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_all_advertisement",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJPbHlhIiwidHlwZSI6ImFjY2VzcyIsImlzcyI6ImNhck1hbmFnZW1lbnRTZXJ2aWNlIiwicm9sZXMiOlsiUk9MRV9TRUxMRVIiXSwiaWF0IjoxNzEwNjkyMjUyLCJleHAiOjE3MTA2OTU4NTJ9.SWPeyz83XGd3QcBM4W0imPeYoXj884ogZKEwTWppcmsMG8RRFKK3wfwgVzrkHgjE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"newEmail@gmail.com\",\r\n    \"username\": \"admin5\",\r\n    \"password\": \"admin123455\",\r\n    \"type\":\"user\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/advertisements",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"advertisements"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_advertisement_by_id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJPbHlhIiwidHlwZSI6ImFjY2VzcyIsImlzcyI6ImNhck1hbmFnZW1lbnRTZXJ2aWNlIiwicm9sZXMiOlsiUk9MRV9TRUxMRVIiXSwiaWF0IjoxNzEwNjkyMjUyLCJleHAiOjE3MTA2OTU4NTJ9.SWPeyz83XGd3QcBM4W0imPeYoXj884ogZKEwTWppcmsMG8RRFKK3wfwgVzrkHgjE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"newEmail@gmail.com\",\r\n    \"username\": \"admin5\",\r\n    \"password\": \"admin123455\",\r\n    \"type\":\"user\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/advertisements/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"advertisements",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_all_brand_and_models_from_db",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJPbHlhIiwidHlwZSI6ImFjY2VzcyIsImlzcyI6ImNhck1hbmFnZW1lbnRTZXJ2aWNlIiwicm9sZXMiOlsiUk9MRV9TRUxMRVIiXSwiaWF0IjoxNzEwNjkyMjUyLCJleHAiOjE3MTA2OTU4NTJ9.SWPeyz83XGd3QcBM4W0imPeYoXj884ogZKEwTWppcmsMG8RRFKK3wfwgVzrkHgjE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"newEmail@gmail.com\",\r\n    \"username\": \"admin5\",\r\n    \"password\": \"admin123455\",\r\n    \"type\":\"user\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/advertisements/details",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"advertisements",
+						"details"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_user_info",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJPbHlhIiwidHlwZSI6ImFjY2VzcyIsImlzcyI6ImNhck1hbmFnZW1lbnRTZXJ2aWNlIiwicm9sZXMiOlsiUk9MRV9TRUxMRVIiXSwiaWF0IjoxNzEwNjkyMjUyLCJleHAiOjE3MTA2OTU4NTJ9.SWPeyz83XGd3QcBM4W0imPeYoXj884ogZKEwTWppcmsMG8RRFKK3wfwgVzrkHgjE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"newEmail@gmail.com\",\r\n    \"username\": \"admin5\",\r\n    \"password\": \"admin123455\",\r\n    \"type\":\"user\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/advertisements/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"advertisements",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_average_price_by_location(optional)",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJPbHlhIiwidHlwZSI6ImFjY2VzcyIsImlzcyI6ImNhck1hbmFnZW1lbnRTZXJ2aWNlIiwicm9sZXMiOlsiUk9MRV9TRUxMRVIiXSwiaWF0IjoxNzEwNjkyMjUyLCJleHAiOjE3MTA2OTU4NTJ9.SWPeyz83XGd3QcBM4W0imPeYoXj884ogZKEwTWppcmsMG8RRFKK3wfwgVzrkHgjE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"newEmail@gmail.com\",\r\n    \"username\": \"admin5\",\r\n    \"password\": \"admin123455\",\r\n    \"type\":\"user\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/advertisements/average-price?location=Lviv",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"advertisements",
+						"average-price"
+					],
+					"query": [
+						{
+							"key": "location",
+							"value": "Lviv"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update_advertisement",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJPbHlhIiwidHlwZSI6ImFjY2VzcyIsImlzcyI6ImNhck1hbmFnZW1lbnRTZXJ2aWNlIiwicm9sZXMiOlsiUk9MRV9TRUxMRVIiXSwiaWF0IjoxNzEwNjkyMjUyLCJleHAiOjE3MTA2OTU4NTJ9.SWPeyz83XGd3QcBM4W0imPeYoXj884ogZKEwTWppcmsMG8RRFKK3wfwgVzrkHgjE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "advertisement",
+							"value": "{\n    \"model\":\"X5\",\n    \"brand\":\"BMW\",\n    \"description\":\"bla-bla-bla\",\n    \"price\":\"1000\",\n    \"currencyType\":\"USD\",\n    \"location\":\"Lviv\"\n}",
+							"contentType": "application/json",
+							"type": "text"
+						},
+						{
+							"key": "photo",
+							"contentType": "multipart/form-data",
+							"type": "file",
+							"src": "/F:/Programming/__Okten_School/Java_Folder/Homework/Java_Advanced/SpringBoot/spring-test/spring-test/src/main/resources/images/bmw3.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/advertisements",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"advertisements"
+					],
+					"query": [
+						{
+							"key": "advertisement",
+							"value": "{\n    \"model\":\"X5\",\n    \"brand\":\"BMW\",\n    \"description\":\"bla-bla-bla\",\n    \"price\":\"1000\",\n    \"currencyType\":\"USD\",\n    \"location\":\"Lviv\"\n}",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete_advertisement_by_id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJPbHlhIiwidHlwZSI6ImFjY2VzcyIsImlzcyI6ImNhck1hbmFnZW1lbnRTZXJ2aWNlIiwicm9sZXMiOlsiUk9MRV9TRUxMRVIiXSwiaWF0IjoxNzEwNjkyMjUyLCJleHAiOjE3MTA2OTU4NTJ9.SWPeyz83XGd3QcBM4W0imPeYoXj884ogZKEwTWppcmsMG8RRFKK3wfwgVzrkHgjE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"newEmail@gmail.com\",\r\n    \"username\": \"admin5\",\r\n    \"password\": \"admin123455\",\r\n    \"type\":\"user\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/advertisements/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"advertisements",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "save_new_brand_and_model",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJPbHlhIiwidHlwZSI6ImFjY2VzcyIsImlzcyI6ImNhck1hbmFnZW1lbnRTZXJ2aWNlIiwicm9sZXMiOlsiUk9MRV9TRUxMRVIiXSwiaWF0IjoxNzEwNjkyMjUyLCJleHAiOjE3MTA2OTU4NTJ9.SWPeyz83XGd3QcBM4W0imPeYoXj884ogZKEwTWppcmsMG8RRFKK3wfwgVzrkHgjE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"brand\":\"Ford\",\r\n    \"model\":\"Focus\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/advertisements/details",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"advertisements",
+						"details"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_views_by_period(optional)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJPbHlhIiwidHlwZSI6ImFjY2VzcyIsImlzcyI6ImNhck1hbmFnZW1lbnRTZXJ2aWNlIiwicm9sZXMiOlsiUk9MRV9TRUxMRVIiXSwiaWF0IjoxNzEwNjkyMjUyLCJleHAiOjE3MTA2OTU4NTJ9.SWPeyz83XGd3QcBM4W0imPeYoXj884ogZKEwTWppcmsMG8RRFKK3wfwgVzrkHgjE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"brand\":\"Ford\",\r\n    \"model\":\"Focus\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/advertisements/1/views?period=day",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"advertisements",
+						"1",
+						"views"
+					],
+					"query": [
+						{
+							"key": "period",
+							"value": "day"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
